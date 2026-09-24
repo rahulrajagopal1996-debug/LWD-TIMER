@@ -1,0 +1,35 @@
+// Target Date: 30th September 2026, 4:00 PM
+const targetDate = new Date("Sep 30, 2026 16:00:00").getTime();
+
+const timer = setInterval(function() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    // Stop timer when it reaches 0
+    if (distance < 0) {
+        clearInterval(timer);
+        document.getElementById("days").innerText = "0";
+        document.getElementById("hours").innerText = "0";
+        document.getElementById("minsec").innerText = "Time's up!";
+        return;
+    }
+
+    // Calculations
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    
+    // Total cumulative hours (not resetting every 24 hours)
+    const totalHours = Math.floor(distance / (1000 * 60 * 60));
+    
+    // Remaining minutes and seconds
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Update the HTML
+    document.getElementById("days").innerText = days;
+    document.getElementById("hours").innerText = totalHours;
+    
+    document.getElementById("minsec").innerText = 
+        String(minutes).padStart(2, '0') + " mins : " + 
+        String(seconds).padStart(2, '0') + " secs";
+
+}, 1000);
