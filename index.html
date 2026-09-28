@@ -5,86 +5,135 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LWD Countdown Timer</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
+      min-height: 100vh;
+      background-color: #1a2233;
       color: #ffffff;
     }
-    .timer-container {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
-      padding: 35px 50px;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    .card {
+      background: #232d42;
+      padding: 40px 48px;
+      border-radius: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      max-width: 440px;
+      width: 90%;
     }
-    h2 {
-      margin-top: 0;
-      font-size: 24px;
-      letter-spacing: 1px;
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
       color: #38bdf8;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
     }
-    .stat-row {
-      margin: 15px 0;
-      font-size: 22px;
+    .target-date {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 28px;
     }
-    .stat-number {
-      font-weight: bold;
+    .timer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .timer-block {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 14px 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .num {
+      display: block;
+      font-size: 28px;
+      font-weight: 700;
       color: #facc15;
     }
-    .time-sub {
-      margin-top: 20px;
-      font-size: 20px;
+    .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .time-banner {
+      margin-top: 24px;
+      font-size: 18px;
       font-weight: 600;
       color: #4ade80;
-      letter-spacing: 0.5px;
     }
   </style>
 </head>
 <body>
 
-  <div class="timer-container">
-    <h2>LWD Countdown</h2>
-    <div class="stat-row">Days: <span id="days" class="stat-number">0</span></div>
-    <div class="stat-row">Total Hours: <span id="hours" class="stat-number">0</span></div>
-    <div id="minsec" class="time-sub">00 mins : 00 secs</div>
+  <div class="card">
+    <h1>LWD Countdown</h1>
+    <p class="target-date">Target: 30 September 2026, 5:00 PM</p>
+
+    <div class="timer-grid">
+      <div class="timer-block">
+        <span id="days" class="num">0</span>
+        <span class="label">Days</span>
+      </div>
+      <div class="timer-block">
+        <span id="hours" class="num">0</span>
+        <span class="label">Hours</span>
+      </div>
+      <div class="timer-block">
+        <span id="minutes" class="num">0</span>
+        <span class="label">Mins</span>
+      </div>
+      <div class="timer-block">
+        <span id="seconds" class="num">0</span>
+        <span class="label">Secs</span>
+      </div>
+    </div>
+
+    <div id="full-string" class="time-banner">Calculating...</div>
   </div>
 
   <script>
-    // Target Date: 30th September 2026, 4:00 PM
-    const targetDate = new Date("Sep 30, 2026 16:00:00").getTime();
+    // Target Date: 30th September 2026, 5:00 PM (17:00:00)
+    const targetDate = new Date("Sep 30, 2026 17:00:00").getTime();
 
     const timer = setInterval(function() {
-        const now = new Date().getTime();
-        const distance = targetDate - now;
+      const now = new Date().getTime();
+      const distance = targetDate - now;
 
-        // Stop timer when it reaches 0
-        if (distance < 0) {
-            clearInterval(timer);
-            document.getElementById("days").innerText = "0";
-            document.getElementById("hours").innerText = "0";
-            document.getElementById("minsec").innerText = "Time's up!";
-            return;
-        }
+      if (distance <= 0) {
+        clearInterval(timer);
+        document.getElementById("days").innerText = "0";
+        document.getElementById("hours").innerText = "0";
+        document.getElementById("minutes").innerText = "0";
+        document.getElementById("seconds").innerText = "0";
+        document.getElementById("full-string").innerText = "Time's up!";
+        return;
+      }
 
-        // Calculations
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const totalHours = Math.floor(distance / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      // Time breakdown calculations
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Update the HTML
-        document.getElementById("days").innerText = days;
-        document.getElementById("hours").innerText = totalHours;
-        document.getElementById("minsec").innerText = 
-            String(minutes).padStart(2, '0') + " mins : " + 
-            String(seconds).padStart(2, '0') + " secs";
+      // Populate grid tiles
+      document.getElementById("days").innerText = days;
+      document.getElementById("hours").innerText = hours;
+      document.getElementById("minutes").innerText = minutes;
+      document.getElementById("seconds").innerText = seconds;
+
+      // Populate one-line combined output
+      document.getElementById("full-string").innerText = 
+        `${days} Days  ${hours} Hours  ${minutes} Mins  ${seconds} Secs`;
     }, 1000);
   </script>
 
