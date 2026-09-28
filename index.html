@@ -2,30 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Countdown Timer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LWD Countdown Timer</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
-    .timer-box { display: inline-block; background: #fff; padding: 20px 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    .unit { font-size: 24px; margin: 10px 0; }
-    span { font-weight: bold; color: #2563eb; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #ffffff;
+    }
+    .timer-container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      padding: 35px 50px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 24px;
+      letter-spacing: 1px;
+      color: #38bdf8;
+    }
+    .stat-row {
+      margin: 15px 0;
+      font-size: 22px;
+    }
+    .stat-number {
+      font-weight: bold;
+      color: #facc15;
+    }
+    .time-sub {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #4ade80;
+      letter-spacing: 0.5px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="timer-box">
-    <h2>Countdown to Sep 30, 2026</h2>
-    <div class="unit">Days: <span id="days">0</span></div>
-    <div class="unit">Total Hours: <span id="hours">0</span></div>
-    <div class="unit"><span id="minsec">00 mins : 00 secs</span></div>
+  <div class="timer-container">
+    <h2>LWD Countdown</h2>
+    <div class="stat-row">Days: <span id="days" class="stat-number">0</span></div>
+    <div class="stat-row">Total Hours: <span id="hours" class="stat-number">0</span></div>
+    <div id="minsec" class="time-sub">00 mins : 00 secs</div>
   </div>
 
   <script>
+    // Target Date: 30th September 2026, 4:00 PM
     const targetDate = new Date("Sep 30, 2026 16:00:00").getTime();
 
     const timer = setInterval(function() {
         const now = new Date().getTime();
         const distance = targetDate - now;
 
+        // Stop timer when it reaches 0
         if (distance < 0) {
             clearInterval(timer);
             document.getElementById("days").innerText = "0";
@@ -34,11 +73,13 @@
             return;
         }
 
+        // Calculations
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const totalHours = Math.floor(distance / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+        // Update the HTML
         document.getElementById("days").innerText = days;
         document.getElementById("hours").innerText = totalHours;
         document.getElementById("minsec").innerText = 
@@ -46,5 +87,6 @@
             String(seconds).padStart(2, '0') + " secs";
     }, 1000);
   </script>
+
 </body>
 </html>
